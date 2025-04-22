@@ -2,34 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Spinning MBC (X-Axis)</title>
+  <title>Orbiting MBC</title>
   <style>
     body {
       background-color: #111;
-      color: white;
-      font-family: Arial, sans-serif;
-      height: 100vh;
       margin: 0;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      perspective: 1000px; /* needed for 3D effect */
+      perspective: 800px; /* This gives the 3D effect */
     }
 
-    .spin {
-      font-size: 60px;
-      font-weight: bold;
-      animation: spinX 3s linear infinite;
+    .scene {
+      width: 200px;
+      height: 200px;
+      position: relative;
       transform-style: preserve-3d;
+      animation: rotate 5s linear infinite;
     }
 
-    @keyframes spinX {
+    .mbc {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) translateZ(150px);
+      font-size: 40px;
+      font-weight: bold;
+      color: white;
+    }
+
+    @keyframes rotate {
       0% { transform: rotateX(0deg); }
       100% { transform: rotateX(360deg); }
     }
   </style>
 </head>
 <body>
-  <div class="spin">MBC</div>
+  <div class="scene">
+    <div class="mbc">MBC</div>
+  </div>
 </body>
 </html>
