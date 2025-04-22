@@ -15,63 +15,65 @@
   </style>
 </head>
 <body>
-  <!-- Naudojame paprastą script įkėlimą -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/examples/js/loaders/FontLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/examples/js/geometries/TextGeometry.js"></script>
   <script>
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 60;
+    camera.position.z = 70;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    const light = new THREE.PointLight(0x00ffff, 2);
-    light.position.set(20, 20, 20);
+    // Bright light
+    const light = new THREE.PointLight(0x00ffff, 3, 200);
+    light.position.set(0, 30, 60);
     scene.add(light);
 
-    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+    // Extra light from other side
+    const backlight = new THREE.PointLight(0xffffff, 1, 200);
+    backlight.position.set(0, -30, -60);
+    scene.add(backlight);
+
+    const ambient = new THREE.AmbientLight(0xffffff, 1);
     scene.add(ambient);
 
     const loader = new THREE.FontLoader();
-    loader.load(
-      'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json',
-      function (font) {
-        const geometry = new THREE.TextGeometry('MBC', {
-          font: font,
-          size: 10,
-          height: 5,
-          curveSegments: 12,
-          bevelEnabled: true,
-          bevelThickness: 1,
-          bevelSize: 0.5,
-          bevelOffset: 0,
-          bevelSegments: 8
-        });
+    loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+      const geometry = new THREE.TextGeometry('MBC', {
+        font: font,
+        size: 10,
+        height: 6,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 1,
+        bevelSize: 0.5,
+        bevelOffset: 0,
+        bevelSegments: 8
+      });
 
-        geometry.center();
+      geometry.center();
 
-        const material = new THREE.MeshStandardMaterial({
-          color: 0x00ffff,
-          emissive: 0x00ffff,
-          metalness: 0.7,
-          roughness: 0.3
-        });
+      const material = new THREE.MeshStandardMaterial({
+        color: 0x00ffff,
+        emissive: 0x00ffff,
+        metalness: 1,
+        roughness: 0.2
+      });
 
-        const textMesh = new THREE.Mesh(geometry, material);
-        scene.add(textMesh);
+      const textMesh = new THREE.Mesh(geometry, material);
+      scene.add(textMesh);
 
-        function animate() {
-          requestAnimationFrame(animate);
-          textMesh.rotation.y += 0.01;
-          renderer.render(scene, camera);
-        }
-
-        animate();
+      function animate() {
+        requestAnimationFrame(animate);
+        textMesh.rotation.y += 0.01;
+        renderer.render(scene, camera);
       }
-    );
+
+      animate();
+    });
 
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
