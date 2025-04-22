@@ -1,13 +1,33 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>My Free Website</title>
-    <style>
-      body { font-family: sans-serif; text-align: center; margin-top: 100px; }
-    </style>
-  </head>
-  <body>
-    <h1>Hello, World!</h1>
-    <p>This is my first free website on GitHub Pages!</p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Spinning MBC</title>
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .spin {
+      font-size: 60px;
+      font-weight: bold;
+      animation: spin 3s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="spin">MBC</div>
+</body>
 </html>
