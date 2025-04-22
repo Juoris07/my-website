@@ -2,28 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Spinning MBC</title>
+  <title>Spinning MBC (X-Axis)</title>
   <style>
     body {
       background-color: #111;
       color: white;
       font-family: Arial, sans-serif;
+      height: 100vh;
+      margin: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      perspective: 1000px; /* needed for 3D effect */
     }
 
     .spin {
       font-size: 60px;
       font-weight: bold;
-      animation: spin 3s linear infinite;
+      animation: spinX 3s linear infinite;
+      transform-style: preserve-3d;
     }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    @keyframes spinX {
+      0% { transform: rotateX(0deg); }
+      100% { transform: rotateX(360deg); }
     }
   </style>
 </head>
