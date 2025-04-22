@@ -2,47 +2,83 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>3D Orbit MBC</title>
+  <title>Glowing 3D MBC</title>
   <style>
     body {
-      background-color: #111;
       margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      perspective: 1000px; /* 3D depth */
+      background: black;
+      overflow: hidden;
     }
-
-    .scene {
-      width: 200px;
-      height: 200px;
-      transform-style: preserve-3d;
-      animation: rotateY 4s linear infinite;
-    }
-
-    .mbc {
-      font-size: 60px;
-      font-weight: 900;
-      color: white;
-      text-shadow:
-        1px 0 0 #ccc,
-        2px 0 0 #bbb,
-        3px 0 0 #aaa,
-        4px 0 0 #999,
-        5px 0 0 #888; /* fake 3D thickness */
-      transform: translateZ(150px);
-    }
-
-    @keyframes rotateY {
-      0% { transform: rotateY(0deg); }
-      100% { transform: rotateY(360deg); }
+    canvas {
+      display: block;
     }
   </style>
 </head>
 <body>
-  <div class="scene">
-    <div class="mbc">MBC</div>
-  </div>
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
+    import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/controls/OrbitControls.js';
+    import { FontLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/loaders/FontLoader.js';
+    import { TextGeometry } from 'https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/geometries/TextGeometry.js';
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera.position.z = 50;
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Lights
+    const glowColor = new THREE.Color(0x00ffff); // Cyan glow
+    const pointLight = new THREE.PointLight(glowColor, 5, 100);
+    pointLight.position.set(20, 20, 20);
+    scene.add(pointLight);
+
+    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambient);
+
+    // Load font
+    const loader = new FontLoader();
+    loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+      const geometry = new TextGeometry('MBC', {
+        font: font,
+        size: 10,
+        height: 5,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 0.5,
+        bevelSize: 0.3,
+        bevelOffset: 0,
+        bevelSegments: 5
+      });
+
+      const material = new THREE.MeshStandardMaterial({
+        color: glowColor,
+        emissive: glowColor,
+        metalness: 0.8,
+        roughness: 0.3
+      });
+
+      const textMesh = new THREE.Mesh(geometry, material);
+      textMesh.geometry.center();
+      scene.add(textMesh);
+
+      // Animate
+      function animate() {
+        requestAnimationFrame(animate);
+        textMesh.rotation.y += 0.01;
+        renderer.render(scene, camera);
+      }
+      animate();
+    });
+
+    // Resize support
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth/window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
 </body>
 </html>
