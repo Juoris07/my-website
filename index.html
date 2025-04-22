@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Orbiting MBC</title>
+  <title>3D Orbit MBC</title>
   <style>
     body {
       background-color: #111;
@@ -11,30 +11,32 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      perspective: 800px; /* This gives the 3D effect */
+      perspective: 1000px; /* 3D depth */
     }
 
     .scene {
       width: 200px;
       height: 200px;
-      position: relative;
       transform-style: preserve-3d;
-      animation: rotate 5s linear infinite;
+      animation: rotateY 4s linear infinite;
     }
 
     .mbc {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) translateZ(150px);
-      font-size: 40px;
-      font-weight: bold;
+      font-size: 60px;
+      font-weight: 900;
       color: white;
+      text-shadow:
+        1px 0 0 #ccc,
+        2px 0 0 #bbb,
+        3px 0 0 #aaa,
+        4px 0 0 #999,
+        5px 0 0 #888; /* fake 3D thickness */
+      transform: translateZ(150px);
     }
 
-    @keyframes rotate {
-      0% { transform: rotateX(0deg); }
-      100% { transform: rotateX(360deg); }
+    @keyframes rotateY {
+      0% { transform: rotateY(0deg); }
+      100% { transform: rotateY(360deg); }
     }
   </style>
 </head>
