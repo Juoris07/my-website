@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Glowing 3D MBC</title>
+  <title>3D Glowing MBC</title>
   <style>
     body {
       margin: 0;
-      background: black;
+      background-color: black;
       overflow: hidden;
     }
     canvas {
@@ -17,65 +17,70 @@
 <body>
   <script type="module">
     import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
-    import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/controls/OrbitControls.js';
     import { FontLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/loaders/FontLoader.js';
     import { TextGeometry } from 'https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/geometries/TextGeometry.js';
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
-    camera.position.z = 50;
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 60;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Lights
-    const glowColor = new THREE.Color(0x00ffff); // Cyan glow
-    const pointLight = new THREE.PointLight(glowColor, 5, 100);
-    pointLight.position.set(20, 20, 20);
-    scene.add(pointLight);
+    const light = new THREE.PointLight(0x00ffff, 2);
+    light.position.set(20, 20, 20);
+    scene.add(light);
 
     const ambient = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambient);
 
-    // Load font
     const loader = new FontLoader();
-    loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-      const geometry = new TextGeometry('MBC', {
-        font: font,
-        size: 10,
-        height: 5,
-        curveSegments: 12,
-        bevelEnabled: true,
-        bevelThickness: 0.5,
-        bevelSize: 0.3,
-        bevelOffset: 0,
-        bevelSegments: 5
-      });
+    loader.load(
+      'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json',
+      function (font) {
+        const geometry = new TextGeometry('MBC', {
+          font: font,
+          size: 10,
+          height: 5,
+          curveSegments: 12,
+          bevelEnabled: true,
+          bevelThickness: 1,
+          bevelSize: 0.5,
+          bevelOffset: 0,
+          bevelSegments: 8
+        });
 
-      const material = new THREE.MeshStandardMaterial({
-        color: glowColor,
-        emissive: glowColor,
-        metalness: 0.8,
-        roughness: 0.3
-      });
+        geometry.center();
 
-      const textMesh = new THREE.Mesh(geometry, material);
-      textMesh.geometry.center();
-      scene.add(textMesh);
+        const material = new THREE.MeshStandardMaterial({
+          color: 0x00ffff,
+          emissive: 0x00ffff,
+          metalness: 0.7,
+          roughness: 0.3
+        });
 
-      // Animate
-      function animate() {
-        requestAnimationFrame(animate);
-        textMesh.rotation.y += 0.01;
-        renderer.render(scene, camera);
+        const textMesh = new THREE.Mesh(geometry, material);
+        scene.add(textMesh);
+
+        function animate() {
+          requestAnimationFrame(animate);
+          textMesh.rotation.y += 0.01;
+          renderer.render(scene, camera);
+        }
+
+        animate();
+      },
+      // onProgress (optional)
+      undefined,
+      // onError
+      function (err) {
+        console.error('Font loading error:', err);
       }
-      animate();
-    });
+    );
 
-    // Resize support
     window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth/window.innerHeight;
+      camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
