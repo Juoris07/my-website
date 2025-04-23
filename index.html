@@ -7,33 +7,33 @@
     body {
       margin: 0;
       background-color: #111;
-      color: #fff;
       font-family: 'Segoe UI', sans-serif;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
       height: 100vh;
-      text-align: center;
+      overflow: hidden;
     }
 
     #timer {
-      font-size: 60px;
-      margin-bottom: 20px;
-      color: #0f0;
+      font-size: 64px;
+      color: grey;
+      z-index: 1;
     }
 
     #message {
-      font-size: 36px;
-      color: #ff4444;
-      text-shadow: 0 0 15px red;
-      opacity: 0;
-      animation: pulse 2s infinite;
-      transition: opacity 0.5s ease;
+      font-size: 28px;
+      color: black;
+      position: absolute;
+      animation:
+        spin 10s linear infinite,
+        pulse 2s infinite ease-in-out;
     }
 
-    #message.visible {
-      opacity: 1;
+    @keyframes spin {
+      0%   { transform: rotate(0deg) translateY(-100px) rotate(0deg); }
+      100% { transform: rotate(360deg) translateY(-100px) rotate(-360deg); }
     }
 
     @keyframes pulse {
@@ -43,6 +43,7 @@
   </style>
 </head>
 <body>
+
   <div id="timer">00:00:00</div>
   <div id="message">Mode pasiduchino</div>
 
@@ -50,7 +51,19 @@
     function updateTimer() {
       const now = new Date();
 
-      // Nustatome laiką pagal Lietuvos laiko zoną (Europe/Vilnius)
-      const formatter = new Intl.DateTimeFormat("lt-LT", {
-        timeZone: "Europe/Vilnius",
-        hour: "2-digit",
+      // Naudojam Vilniaus laiką
+      const formatter = new Intl.DateTimeFormat('lt-LT', {
+        timeZone: 'Europe/Vilnius',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
+
+      const parts = formatter.formatToParts(now);
+      const hours = +parts.find(p => p.type === 'hour').value;
+      const minutes = +parts.find(p => p.type === 'minute').value;
+      const seconds = +parts.find(p => p.type === 'second').value;
+
+      const currentSeconds = hours * 3600 + minutes * 60 + seconds;
+      const targetSeconds = 17 * 3600; //*
