@@ -49,31 +49,26 @@
     let angle = 0;
     const radius = 160;
 
-    function updateTimer() {
+    function getVilniusTime() {
       const now = new Date();
-
-      const formatter = new Intl.DateTimeFormat('lt-LT', {
-        timeZone: 'Europe/Vilnius',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
+      const vilniusTimeString = now.toLocaleString('en-US', {
+        timeZone: 'Europe/Vilnius'
       });
+      return new Date(vilniusTimeString);
+    }
 
-      const parts = formatter.formatToParts(now);
-      const hours = +parts.find(p => p.type === 'hour').value;
-      const minutes = +parts.find(p => p.type === 'minute').value;
-      const seconds = +parts.find(p => p.type === 'second').value;
+    function updateTimer() {
+      const vilniusNow = getVilniusTime();
 
-      const currentSeconds = hours * 3600 + minutes * 60 + seconds;
-      const targetSeconds = 17 * 3600;
+      const target = new Date(vilniusNow);
+      target.setHours(17, 0, 0, 0); // 17:00 Lietuvos laiku
 
-      let passed = currentSeconds - targetSeconds;
-      if (passed < 0) passed = 0;
+      let diff = vilniusNow - target;
+      if (diff < 0) diff = 0;
 
-      const h = String(Math.floor(passed / 3600)).padStart(2, '0');
-      const m = String(Math.floor((passed % 3600) / 60)).padStart(2, '0');
-      const s = String(passed % 60).padStart(2, '0');
+      const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
+      const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+      const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
 
       timer.textContent = `${h}:${m}:${s}`;
     }
