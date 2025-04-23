@@ -25,7 +25,12 @@
     #message {
       font-size: 24px;
       color: #ff4b4b;
-      display: none;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    #message.visible {
+      opacity: 1;
     }
   </style>
 </head>
@@ -39,22 +44,8 @@
       const target = new Date();
       target.setHours(17, 0, 0, 0);
 
-      if (now >= target) {
-        document.getElementById('timer').style.display = 'none';
-        document.getElementById('message').style.display = 'block';
-        return;
-      }
-
       const diff = target - now;
-      const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
-      const minutes = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, '0');
-      const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
 
-      document.getElementById('timer').textContent = `${hours}:${minutes}:${seconds}`;
-    }
-
-    updateTimer();
-    setInterval(updateTimer, 1000);
-  </script>
-</body>
-</html>
+      if (diff <= 0) {
+        // 17:00 jau atėjo
+        document.getElement
