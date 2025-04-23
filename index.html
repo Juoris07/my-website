@@ -8,62 +8,41 @@
       margin: 0;
       background-color: #111;
       font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
+    }
+
+    #container {
+      position: relative;
+      width: 400px;
+      height: 400px;
     }
 
     #timer {
-      font-size: 64px;
+      font-size: 60px;
       color: grey;
-      z-index: 1;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
     }
 
     #message {
-      font-size: 28px;
-      color: black;
+      font-size: 24px;
+      color: white;
       position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: -160px center;
       animation:
-        spin 10s linear infinite,
-        pulse 2s infinite ease-in-out;
+        rotate 10s linear infinite,
+        pulse 2s ease-in-out infinite;
+      white-space: nowrap;
     }
 
-    @keyframes spin {
-      0%   { transform: rotate(0deg) translateY(-100px) rotate(0deg); }
-      100% { transform: rotate(360deg) translateY(-100px) rotate(-360deg); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-  </style>
-</head>
-<body>
-
-  <div id="timer">00:00:00</div>
-  <div id="message">Mode pasiduchino</div>
-
-  <script>
-    function updateTimer() {
-      const now = new Date();
-
-      // Naudojam Vilniaus laiką
-      const formatter = new Intl.DateTimeFormat('lt-LT', {
-        timeZone: 'Europe/Vilnius',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      });
-
-      const parts = formatter.formatToParts(now);
-      const hours = +parts.find(p => p.type === 'hour').value;
-      const minutes = +parts.find(p => p.type === 'minute').value;
-      const seconds = +parts.find(p => p.type === 'second').value;
-
-      const currentSeconds = hours * 3600 + minutes * 60 + seconds;
-      const targetSeconds = 17 * 3600; //*
+    @keyframes rotate {
+      0%   { transform: rotate(
