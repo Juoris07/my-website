@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="lt">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Mode Dx Orbit</title>
   <style>
     body {
       margin: 0;
       background: #111;
-      color: white;
       font-family: 'Segoe UI', sans-serif;
       overflow: hidden;
       height: 100vh;
@@ -20,7 +19,6 @@
       transform: translate(-50%, -50%);
       font-size: 64px;
       color: grey;
-      z-index: 1;
     }
 
     #message {
@@ -29,7 +27,6 @@
       color: white;
       animation: pulse 2s infinite ease-in-out;
       white-space: nowrap;
-      z-index: 0;
     }
 
     @keyframes pulse {
@@ -40,36 +37,34 @@
 </head>
 <body>
 
-  <div id="timer">00:00:00</div>
+  <div id="timer">Kraunasi...</div>
   <div id="message">Mode Dx</div>
 
   <script>
-    const timer = document.getElementById('timer');
-    const message = document.getElementById('message');
+    const timer = document.getElementById("timer");
+    const message = document.getElementById("message");
     let angle = 0;
     const radius = 160;
 
-    function getVilniusParts() {
-      const now = new Date();
-      const formatter = new Intl.DateTimeFormat('lt-LT', {
-        timeZone: 'Europe/Vilnius',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      });
-      const parts = formatter.formatToParts(now);
-      const hour = +parts.find(p => p.type === 'hour').value;
-      const minute = +parts.find(p => p.type === 'minute').value;
-      const second = +parts.find(p => p.type === 'second').value;
-      return { hour, minute, second };
+    let timeOffset = 0;
+
+    async function fetchVilniusTimeOffset() {
+      const res = await fetch('https://worldtimeapi.org/api/timezone/Europe/Vilnius');
+      const data = await res.json();
+      const serverTime = new Date(data.datetime);
+      const localTime = new Date();
+      timeOffset = serverTime.getTime() - localTime.getTime();
     }
 
     function updateTimer() {
-      const { hour, minute, second } = getVilniusParts();
+      const now = new Date(Date.now() + timeOffset);
 
-      const totalNowSec = hour * 3600 + minute * 60 + second;
-      const targetSec = 17 * 3600; // 17:00:00
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+
+      const totalNowSec = hours * 3600 + minutes * 60 + seconds;
+      const targetSec = 17 * 3600;
 
       let diff = totalNowSec - targetSec;
       if (diff < 0) diff = 0;
@@ -95,10 +90,12 @@
       requestAnimationFrame(animateOrbit);
     }
 
-    updateTimer();
-    setInterval(updateTimer, 1000);
-    animateOrbit();
+    // Start everything
+    fetchVilniusTimeOffset().then(() => {
+      updateTimer();
+      setInterval(updateTimer, 1000);
+      animateOrbit();
+    });
   </script>
-
 </body>
 </html>
