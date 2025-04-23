@@ -2,7 +2,7 @@
 <html lang="lt">
 <head>
   <meta charset="UTF-8" />
-  <title>Mode pasiduchino</title>
+  <title>Mode Dx</title>
   <style>
     body {
       margin: 0;
@@ -32,7 +32,7 @@
     }
 
     #message {
-      font-size: 24px;
+      font-size: 28px;
       color: white;
       position: absolute;
       top: 50%;
@@ -45,4 +45,57 @@
     }
 
     @keyframes rotate {
-      0%   { transform: rotate(
+      0%   { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+      100% { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="container">
+    <div id="timer">00:00:00</div>
+    <div id="message">Mode Dx</div>
+  </div>
+
+  <script>
+    function updateTimer() {
+      const now = new Date();
+
+      // Vilniaus laikas
+      const formatter = new Intl.DateTimeFormat('lt-LT', {
+        timeZone: 'Europe/Vilnius',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
+
+      const parts = formatter.formatToParts(now);
+      const hours = +parts.find(p => p.type === 'hour').value;
+      const minutes = +parts.find(p => p.type === 'minute').value;
+      const seconds = +parts.find(p => p.type === 'second').value;
+
+      const currentSeconds = hours * 3600 + minutes * 60 + seconds;
+      const targetSeconds = 17 * 3600;
+
+      let passed = currentSeconds - targetSeconds;
+      if (passed < 0) passed = 0;
+
+      const h = String(Math.floor(passed / 3600)).padStart(2, '0');
+      const m = String(Math.floor((passed % 3600) / 60)).padStart(2, '0');
+      const s = String(passed % 60).padStart(2, '0');
+
+      document.getElementById('timer').textContent = `${h}:${m}:${s}`;
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  </script>
+
+</body>
+</html>
