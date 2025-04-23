@@ -24,7 +24,8 @@
 
     #message {
       font-size: 24px;
-      color: #888;
+      color: #ff4b4b;
+      display: none;
     }
   </style>
 </head>
@@ -38,10 +39,22 @@
       const target = new Date();
       target.setHours(17, 0, 0, 0);
 
-      // Jei jau po 17:00, rodom 00:00:00
-      if (now > target) {
-        document.getElementById('timer').textContent = "00:00:00";
+      if (now >= target) {
+        document.getElementById('timer').style.display = 'none';
+        document.getElementById('message').style.display = 'block';
         return;
       }
 
-      const diff =
+      const diff = target - now;
+      const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
+      const minutes = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, '0');
+      const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+
+      document.getElementById('timer').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  </script>
+</body>
+</html>
